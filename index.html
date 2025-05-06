@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>IA Search - Página Inicial</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background-color: #f0f0f0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #555;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1rem;
+      margin: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+    }
+    .quiz-btn {
+      background-color: #4CAF50;
+    }
+    .info-btn {
+      background-color: #2196F3;
+    }
+    .search-section {
+      margin-top: 2rem;
+      text-align: left;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .explicacao {
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>IA Search - Detectando Inteligência Artificial</h1>
+    <p>Explore nosso quiz e veja dicas para se proteger de golpes com imagens geradas por IA.</p>
+
+    <!-- Botões para navegar -->
+    <button class="quiz-btn" onclick="location.href='quiz.html'">🧠 Começar o Quiz</button>
+    <button class="info-btn" onclick="location.href='informativo.html'">📘 Ver Dicas e Informações</button>
+
+    <!-- Seção de pesquisa IA -->
+    <div class="search-section">
+      <h2>Simulador de Busca por IA</h2>
+      <p>Digite uma expressão para avaliar se ela "soa" como algo gerado por IA.</p>
+      <input type="text" id="iaInput" placeholder="Ex: Receita mágica de sucesso" />
+      <div class="result" id="iaResult"></div>
+      <div class="explicacao" id="iaExplicacao"></div>
+    </div>
+  </div>
+
+  <script>
+    const iaInput = document.getElementById('iaInput');
+    const iaResult = document.getElementById('iaResult');
+    const iaExplicacao = document.getElementById('iaExplicacao');
+
+    iaInput.addEventListener('input', () => {
+      const texto = iaInput.value.toLowerCase();
+
+      const palavrasSuspeitas = [
+        "incrível", "mágico", "transformador", "solução definitiva", "revolucionário",
+        "100% garantido", "inteligência artificial", "resultado imediato", "fature",
+        "ganhos altos", "céu", "portal", "apocalipse", "imagens impressionantes"
+      ];
+
+      const suspeita = palavrasSuspeitas.some(palavra => texto.includes(palavra));
+
+      if (texto.length < 3) {
+        iaResult.innerText = "";
+        iaExplicacao.innerText = "";
+      } else if (suspeita) {
+        iaResult.innerText = "⚠️ Isso soa como algo gerado por IA.";
+        iaResult.style.color = "darkorange";
+        iaExplicacao.innerText = "Expressões genéricas e exageradas são comuns em conteúdos gerados por IA para chamar atenção ou vender algo.";
+      } else {
+        iaResult.innerText = "✅ Isso parece um conteúdo natural.";
+        iaResult.style.color = "green";
+        iaExplicacao.innerText = "A linguagem usada parece autêntica e específica, o que indica menor chance de ter sido gerada por IA.";
+      }
+    });
+  </script>
+</body>
+</html>
+
+</html>

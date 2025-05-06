@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz: Real ou IA?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background-color: #f4f4f4;
+    }
+    .quiz-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .real {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .fake {
+      background-color: #f44336;
+      color: white;
+    }
+    #feedback {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .explanation {
+      text-align: left;
+      margin-top: 1rem;
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Essa imagem é real ou gerada por IA?</h1>
+    <img id="quiz-image" src="" alt="Imagem do quiz" />
+    <div>
+      <button class="real" onclick="checkAnswer('real')">Real</button>
+      <button class="fake" onclick="checkAnswer('fake')">Gerada por IA</button>
+    </div>
+    <div id="feedback"></div>
+    <p id="score"></p>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        img: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d',
+        answer: 'real',
+        explanation: 'Foto real tirada por um fotógrafo. Observe a iluminação natural e os detalhes coerentes.'
+      },
+      {
+        img: 'https://generated.photos/vue-static/home/hero/2.png',
+        answer: 'fake',
+        explanation: 'Imagem gerada digitalmente. As texturas da pele e dos cabelos podem parecer plásticas ou irreais.'
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61',
+        answer: 'real',
+        explanation: 'Imagem autêntica. Repare nos detalhes realistas como poros, sombras e foco.'
+      },
+      {
+        img: 'https://generated.photos/vue-static/home/hero/1.png',
+        answer: 'fake',
+        explanation: 'Gerada por IA. Possui fundo borrado e imperfeições ao redor das orelhas e olhos.'
+      },
+      {
+        img: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36',
+        answer: 'real',
+        explanation: 'Imagem real. A iluminação e composição indicam uma foto autêntica.'
+      }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let results = [];
+
+    function loadQuestion() {
+      document.getElementById('quiz-image').src = questions[current].img;
+      document.getElementById('feedback').innerText = '';
+      document.getElementById('score').innerText = `Pontuação: ${score} / ${questions.length}`;
+    }
+
+    function checkAnswer(choice) {
+      const question = questions[current];
+      const feedback = document.getElementById('feedback');
+
+      if (choice === question.answer) {
+        feedback.innerText = '✅ Resposta correta!';
+        feedback.style.color = 'green';
+        score++;
+        results.push({ ...question, correct: true });
+      } else {
+        feedback.innerText = '❌ Resposta incorreta!';
+        feedback.style.color = 'red';
+        results.push({ ...question, correct: false });
+      }
+
+      setTimeout(() => {
+        current++;
+        if (current < questions.length) {
+          loadQuestion();
+        } else {
+          showResults();
+        }
+      }, 1500);
+    }
+
+    function showResults() {
+      let html = `<h2>Quiz finalizado!</h2><p>Você acertou ${score} de ${questions.length} perguntas.</p><button onclick='restartQuiz()'>Reiniciar Quiz</button><h3>Gabarito e explicações:</h3>`;
+      results.forEach((res, index) => {
+        html += `
+          <div class="explanation">
+            <p><strong>Pergunta ${index + 1}</strong></p>
+            <img src="${res.img}" alt="imagem ${index + 1}" style="max-width: 100%; border-radius: 5px;" />
+            <p>Resposta correta: <strong>${res.answer === 'real' ? 'Real' : 'Gerada por IA'}</strong></p>
+            <p>Você ${res.correct ? 'acertou ✅' : 'errou ❌'}</p>
+            <p><em>${res.explanation}</em></p>
+          </div>
+        `;
+      });
+      document.querySelector('.quiz-container').innerHTML = html;
+    }
+
+    function restartQuiz() {
+      current = 0;
+      score = 0;
+      results = [];
+      document.querySelector('.quiz-container').innerHTML = `
+        <h1>Essa imagem é real ou gerada por IA?</h1>
+        <img id="quiz-image" src="" alt="Imagem do quiz">
+        <div>
+          <button class="real" onclick="checkAnswer('real')">Real</button>
+          <button class="fake" onclick="checkAnswer('fake')">Gerada por IA</button>
+        </div>
+        <div id="feedback"></div>
+        <p id="score"></p>
+      `;
+      loadQuestion();
+    }
+
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>
