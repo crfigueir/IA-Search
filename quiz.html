@@ -56,10 +56,10 @@
 <body>
   <div class="quiz-container">
     <h1>Essa imagem é real ou gerada por IA?</h1>
-    
+
     <label for="usuario">Seu nome:</label><br>
-<input type="text" id="usuario" placeholder="Digite seu nome" />
-<br><br>
+    <input type="text" id="usuario" placeholder="Digite seu nome" />
+    <br><br>
 
     <img id="quiz-image" src="" alt="Imagem do quiz" />
     <div>
@@ -70,7 +70,43 @@
     <p id="score"></p>
   </div>
 
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <script>
+    // Sua configuração do Firebase (cole suas credenciais aqui)
+    const firebaseConfig = {
+      apiKey: "AIzaSyCORYLJu7cTi7eC3VM9vKMxRghb8XuB5WI",
+      authDomain: "quiz-ia-5ef88.firebaseapp.com",
+      projectId: "quiz-ia-5ef88",
+      storageBucket: "quiz-ia-5ef88.firebasestorage.app",
+      messagingSenderId: "146205196266",
+      appId: "1:146205196266:web:ee53b63e5c02e610a9bc93",
+      measurementId: "G-CY6ESMECXQ"
+    };
+
+    // Inicialize o Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function salvarResultado(nome, pontuacao) {
+      db.collection("quiz_results")
+        .add({
+          nome: nome,
+          pontuacao: pontuacao,
+          dataHora: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then((docRef) => {
+          console.log("Resultado salvo com ID: ", docRef.id);
+          alert("Seu resultado foi salvo!");
+          // Aqui você pode redirecionar o usuário ou fazer outra ação
+        })
+        .catch((error) => {
+          console.error("Erro ao adicionar documento: ", error);
+          alert("Ocorreu um erro ao salvar seu resultado.");
+        });
+    }
+
     const questions = [
       {
         img: 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d',
@@ -135,6 +171,9 @@
     }
 
     function showResults() {
+      const nomeDoUsuario = document.getElementById('usuario').value;
+      salvarResultado(nomeDoUsuario, score); // Salva o resultado ao final do quiz
+
       let html = `<h2>Quiz finalizado!</h2><p>Você acertou ${score} de ${questions.length} perguntas.</p><button onclick='restartQuiz()'>Reiniciar Quiz</button><h3>Gabarito e explicações:</h3>`;
       results.forEach((res, index) => {
         html += `
@@ -156,6 +195,8 @@
       results = [];
       document.querySelector('.quiz-container').innerHTML = `
         <h1>Essa imagem é real ou gerada por IA?</h1>
+        <label for="usuario">Seu nome:</label><br>
+        <input type="text" id="usuario" placeholder="Digite seu nome" /><br><br>
         <img id="quiz-image" src="" alt="Imagem do quiz">
         <div>
           <button class="real" onclick="checkAnswer('real')">Real</button>
